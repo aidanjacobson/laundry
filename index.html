@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Laundry App</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+        <script src="configutils.js"></script>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div id="mainPage">
+            <button onclick="startLaundry()" id="startBtn">Start New Load</button>
+            <div id="loads">
+            </div>
+        </div>
+        <div id="moreInfo" hidden>
+            <h1>Laundry Load</h1>
+            <p>Start Time: <span id="miStart"></span></p>
+            <p>End Time: <span id="miEnd"></span></p>
+            <p>Location: <span id="miLoc"></span></p>
+            <p>Machine Number: <span id="miNum" class="fakeLink" onclick="miSet()">Click to Set</span></p>
+            <p class="fakeLink" id="actionBtn" onclick="actionBtnClick()">Move To Dryer</p>
+            <button id="backBtn" onclick="backToMain()">Back</button>
+        </div>
+    </body>
+</html>

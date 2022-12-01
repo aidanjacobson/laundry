@@ -1,0 +1,60 @@
+body {
+    background-color: rgb(13, 163, 163);
+    font-family: monospace;
+    text-align: center;
+}
+
+#startBtn {
+    width: 100%;
+    height: 500px;
+    font-size: 100px;
+    background-color: rgb(14, 109, 1);
+    border-radius: 50px;
+    border: 2px solid;
+    margin: 5px;
+    margin-bottom: 30px;
+    font-family: monospace;
+}
+
+.load {
+    width: 100%;
+    height: 500px;
+    font-size: 75px;
+    border-radius: 50px;
+    border: 1px solid;
+    margin: 5px;
+}
+
+.wash {
+    background-color:rgb(12, 76, 92);
+}
+
+.dry {
+    background-color: rgb(76, 0, 126);
+}
+
+.done {
+    background-color: yellow !important;
+}
+
+#moreInfo {
+    text-align: left;
+    font-size: 75px;
+}
+
+.fakeLink {
+    color: red;
+    text-decoration: underline;
+}
+
+#backBtn {
+    width: 100%;
+    height: 500px;
+    font-size: 100px;
+    background-color: rgb(14, 109, 1);
+    border-radius: 50px;
+    border: 2px solid;
+    margin: 5px;
+    margin-bottom: 30px;
+    font-family: monospace;
+}
