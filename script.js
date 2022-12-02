@@ -56,7 +56,9 @@ async function parseLaundries() {
         locationElement.innerText = `${locationString}`;
         loadElement.appendChild(timeElement);
         loadElement.appendChild(locationElement);
-        loadElement.addEventListener("click", doLoadClickHandle, true)
+        loadElement.addEventListener("click", doLoadClickHandle, true);
+        loadElement.children[0].setAttribute("data-index", i);
+        loadElement.children[1].setAttribute("data-index", i);
         loads.appendChild(loadElement);
     }
 }
@@ -83,6 +85,7 @@ function updateLaundryTexts() {
 }
 
 function doLoadClickHandle(event) {
+    event.stopPropagation();
     var index = +event.target.getAttribute("data-index");
     console.log(event.target);
     moreInfoFor(index);
