@@ -75,6 +75,7 @@ function updateLaundryTexts() {
         var seconds = Math.floor(remaining/1000).toString().padStart(2, "0");
         if (Date.now() > load.started+load.duration) {
             loadElement.children[0].innerText = `Finished at ${finishingString}`;
+            loadElement.classList.add("done");
         } else {
             loadElement.children[0].innerText = `${finishingString} - ${minutes}:${seconds} remaining`;
         }
