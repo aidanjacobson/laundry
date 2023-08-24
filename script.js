@@ -10,6 +10,10 @@
         }]
     }
 */
+
+const washer_mins = 38;
+const dryer_mins = 50;
+
 async function main() {
     mainPage = document.querySelector("#mainPage");
     moreInfo = document.querySelector("#moreInfo");
@@ -23,7 +27,7 @@ async function startLaundry() {
     var time = Date.now();
     config.loads.push({
         started: time,
-        duration: 30*60*1000,
+        duration: washer_mins*60*1000,
         location: 0,
         machineNumber: ""
     });
@@ -136,7 +140,7 @@ async function actionBtnClick() {
         config.loads[lastIndex].location = 1;
         config.loads[lastIndex].machineNumber = "";
         config.loads[lastIndex].started = Date.now();
-        config.loads[lastIndex].duration = 50*60*1000;
+        config.loads[lastIndex].duration = dryer_mins*60*1000;
     } else {
         config.loads.splice(lastIndex, 1);
     }
