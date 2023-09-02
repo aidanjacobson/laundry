@@ -8,6 +8,8 @@
               1: dryer
             machineNumber: String
         }]
+        nextFinish: timestamp,
+        lastFinish: timestamp
     }
 */
 
@@ -17,7 +19,7 @@ const dryer_mins = 50;
 async function main() {
     mainPage = document.querySelector("#mainPage");
     moreInfo = document.querySelector("#moreInfo");
-    doAccessCheck();
+    await doAccessCheck();
     await parseLaundries();
 }
 
@@ -31,8 +33,24 @@ async function startLaundry() {
         location: 0,
         machineNumber: ""
     });
+    calculateFirstAndLastFinish();
     await saveConfig();
     await parseLaundries();
+}
+
+function calculateFirstAndLastFinish() {
+    var firstFinish = -1;
+    var lastFinish = -1;
+    for (var i = 0; i < config.loads.length; i++) {
+        if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1) && config.loads[i].started+config.loads[i].duration > Date.now()) {
+            firstFinish = config.loads[i].started+config.loads[i].duration;
+        }
+        if (config.loads[i].started+config.loads[i].duration > lastFinish || lastFinish == -1) {
+            lastFinish = config.loads[i].started+config.loads[i].duration;
+        }
+    }
+    config.nextFinish = firstFinish;
+    config.lastFinish = lastFinish;
 }
 
 async function parseLaundries() {
@@ -144,6 +162,7 @@ async function actionBtnClick() {
     } else {
         config.loads.splice(lastIndex, 1);
     }
+    calculateFirstAndLastFinish();
     await saveConfig();
     backToMain();
 }
