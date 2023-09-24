@@ -90,6 +90,7 @@ setInterval(updateLaundryTexts, 50)
 function updateLaundryTexts() {
     for (var i = 0; i < loads.children.length; i++) {
         var loadElement = loads.children[i];
+        if (!loadElement) continue;
         var load = config.loads[i];
         var finishingTime = new Date(load.started+load.duration);
         var finishingString = finishingTime.toLocaleString("en-US", {hour: "numeric", minute: "2-digit"});
@@ -109,14 +110,12 @@ function updateLaundryTexts() {
 function doLoadClickHandle(event) {
     event.stopPropagation();
     var index = +event.target.getAttribute("data-index");
-    console.log(event.target);
     moreInfoFor(index);
 }
 var mainPage;
 var moreInfo;
 var lastIndex;
 function moreInfoFor(index) {
-    console.log(index);
     lastIndex = index;
     mainPage.hide();
     moreInfo.show();
