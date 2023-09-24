@@ -166,3 +166,22 @@ async function actionBtnClick() {
     await saveConfig();
     backToMain();
 }
+
+async function setStartTime() {
+    var currentTime = new Date(config.loads[lastIndex].started).toLocaleString("en-US", {hour: "numeric", minute: "2-digit"});
+    var newStart = prompt("Enter new start time", currentTime);
+    var newDate = new Date(getTripleDate() + " " + newStart);
+    if (isNaN(newDate)) {
+        alert("Invalid start time! Make sure to include either AM or PM with a space before.");
+        return;
+    }
+    config.loads[lastIndex].started = newDate.getTime();
+    calculateFirstAndLastFinish();
+    await saveConfig();
+    moreInfoFor(lastIndex);
+}
+
+function getTripleDate() {
+    var d = new Date();
+    return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+}
