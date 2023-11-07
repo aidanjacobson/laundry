@@ -16,6 +16,8 @@
 const washer_mins = 38;
 const dryer_mins = 50;
 
+// Window loaded
+window.addEventListener("load", main);
 async function main() {
     mainPage = document.querySelector("#mainPage");
     moreInfo = document.querySelector("#moreInfo");
@@ -23,8 +25,7 @@ async function main() {
     await parseLaundries();
 }
 
-window.addEventListener("load", main);
-
+// Starts a new load of laundry in the washer;
 async function startLaundry() {
     var time = Date.now();
     config.loads.push({
@@ -38,14 +39,16 @@ async function startLaundry() {
     await parseLaundries();
 }
 
+// calculate the time when the first load will be done, and when the last load (all loads) will be done
+// used for quick information display in smart home
 function calculateFirstAndLastFinish() {
     var firstFinish = -1;
     var lastFinish = -1;
     for (var i = 0; i < config.loads.length; i++) {
-        if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1) && config.loads[i].started+config.loads[i].duration > Date.now()) {
+        if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1) && config.loads[i].started+config.loads[i].duration > Date.now()) { // found new first finisher that isn't already done
             firstFinish = config.loads[i].started+config.loads[i].duration;
         }
-        if (config.loads[i].started+config.loads[i].duration > lastFinish || lastFinish == -1) {
+        if (config.loads[i].started+config.loads[i].duration > lastFinish || lastFinish == -1) { // found new last finisher
             lastFinish = config.loads[i].started+config.loads[i].duration;
         }
     }
@@ -53,6 +56,7 @@ function calculateFirstAndLastFinish() {
     config.lastFinish = lastFinish;
 }
 
+// read list of loads and populate display accordingly
 async function parseLaundries() {
     await updateConfig();
     loads.innerHTML = "";
@@ -85,8 +89,9 @@ async function parseLaundries() {
     }
 }
 
-setInterval(updateLaundryTexts, 50)
+setInterval(updateLaundryTexts, 50) // update time remaining ~20 times / second
 
+// update remaining time on existing laundry cards to avoid re-rendering all cards
 function updateLaundryTexts() {
     for (var i = 0; i < loads.children.length; i++) {
         var loadElement = loads.children[i];
@@ -107,15 +112,17 @@ function updateLaundryTexts() {
     }
 }
 
+// click handler for laundry card
 function doLoadClickHandle(event) {
     event.stopPropagation();
     var index = +event.target.getAttribute("data-index");
     moreInfoFor(index);
 }
+
 var mainPage;
 var moreInfo;
 var lastIndex;
-function moreInfoFor(index) {
+function moreInfoFor(index) { // show detailed view for load by load index
     lastIndex = index;
     mainPage.hide();
     moreInfo.show();
@@ -129,6 +136,7 @@ function moreInfoFor(index) {
     }
 }
 
+// element helper functions
 HTMLElement.prototype.hide = function() {
     this.hidden = true;
 }
@@ -136,6 +144,7 @@ HTMLElement.prototype.show = function() {
     this.removeAttribute("hidden");
 }
 
+// set machine number on more info page
 async function miSet() {
     var newMi = prompt("Enter Machine Number", config.loads[lastIndex].machineNumber)
     if (newMi) {
@@ -146,19 +155,21 @@ async function miSet() {
     moreInfoFor(lastIndex);
 }
 
+// back button on more info page click handler
 function backToMain() {
     moreInfo.hide();
     mainPage.show();
     parseLaundries();
 }
 
+// "move to dryer" or "delete load" click
 async function actionBtnClick() {
-    if (config.loads[lastIndex].location == 0) {
+    if (config.loads[lastIndex].location == 0) { // load is in washer, move to dryer
         config.loads[lastIndex].location = 1;
         config.loads[lastIndex].machineNumber = "";
         config.loads[lastIndex].started = Date.now();
         config.loads[lastIndex].duration = dryer_mins*60*1000;
-    } else {
+    } else { // load is in dryer, we can delete
         config.loads.splice(lastIndex, 1);
     }
     calculateFirstAndLastFinish();
@@ -166,6 +177,7 @@ async function actionBtnClick() {
     backToMain();
 }
 
+// set new start time for laundry load
 async function setStartTime() {
     var currentTime = new Date(config.loads[lastIndex].started).toLocaleString("en-US", {hour: "numeric", minute: "2-digit"});
     var newStart = prompt("Enter new start time", currentTime);
@@ -180,6 +192,7 @@ async function setStartTime() {
     moreInfoFor(lastIndex);
 }
 
+// helper function to return date in mm/dd/yyyy format
 function getTripleDate() {
     var d = new Date();
     return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
