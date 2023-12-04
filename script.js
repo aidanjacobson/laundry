@@ -9,7 +9,10 @@
             machineNumber: String
         }]
         nextFinish: timestamp,
-        lastFinish: timestamp
+        lastFinish: timestamp,
+        settings: {
+            notifs: String
+        }
     }
 */
 
@@ -34,7 +37,7 @@ async function startLaundry() {
         location: 0,
         machineNumber: ""
     });
-    calculateFirstAndLastFinish();
+    await calculateFirstAndLastFinish();
     await saveConfig();
     await parseLaundries();
 }
@@ -45,20 +48,23 @@ function calculateFirstAndLastFinish() {
     var firstFinish = -1;
     var lastFinish = -1;
     for (var i = 0; i < config.loads.length; i++) {
-        if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1) && config.loads[i].started+config.loads[i].duration > Date.now()) { // found new first finisher that isn't already done
+        if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1)) { // found new first finisher that isn't already done
             firstFinish = config.loads[i].started+config.loads[i].duration;
         }
         if (config.loads[i].started+config.loads[i].duration > lastFinish || lastFinish == -1) { // found new last finisher
             lastFinish = config.loads[i].started+config.loads[i].duration;
         }
     }
+    console.log(firstFinish, lastFinish);
     config.nextFinish = firstFinish;
     config.lastFinish = lastFinish;
+    updateFinishBasedOnPrefs();
 }
 
 // read list of loads and populate display accordingly
 async function parseLaundries() {
     await updateConfig();
+    updateSelectedPrefs();
     loads.innerHTML = "";
     for (var i = 0; i < config.loads.length; i++) {
         var load = config.loads[i];
@@ -93,6 +99,13 @@ setInterval(updateLaundryTexts, 50) // update time remaining ~20 times / second
 
 // update remaining time on existing laundry cards to avoid re-rendering all cards
 function updateLaundryTexts() {
+    if (!config.loads) {
+        return;
+    }
+    if (loads.children.length != config.loads.length) {
+        parseLaundries();
+        return;
+    }
     for (var i = 0; i < loads.children.length; i++) {
         var loadElement = loads.children[i];
         if (!loadElement) continue;
@@ -196,4 +209,43 @@ async function setStartTime() {
 function getTripleDate() {
     var d = new Date();
     return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+}
+
+function settingsClick() {
+    mainPage.hide();
+    settings.show();
+}
+
+async function doNotifPrefChange() {
+    var selectedOption = document.querySelector('input[name="notif-pref"]:checked').value;
+    config.settings.notifs = selectedOption;
+    calculateFirstAndLastFinish();
+    await saveConfig();
+}
+
+function updateFinishBasedOnPrefs() {
+    if (config.settings.notifs == "alldone") {
+        config.finish = config.lastFinish;
+    } else {
+        config.finish = config.nextFinish;
+    }
+}
+
+function updateSelectedPrefs() {
+    updateSelectedNotifPref();
+}
+
+function updateSelectedNotifPref() {
+    var elements = document.getElementsByName("notif-pref");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].checked = false;
+        if (config.settings.notifs == elements[i].value) {
+            elements[i].checked = true;
+        }
+    }
+}
+
+function backFromSettings() {
+    settings.hide();
+    mainPage.show();
 }

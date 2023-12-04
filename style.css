@@ -64,3 +64,50 @@ body {
     color: red;
     cursor: pointer;
 }
+
+#settingsContainer {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+}
+
+.text-l1 {
+    font-size: 150px;
+}
+
+#settings > .text-l1 {
+    text-align: center;
+}
+
+#settings {
+    text-align: left;
+    width: 100%;
+    height: 100%;
+}
+
+.text-l2 {
+    font-size: 75px;
+}
+
+.text-l3 {
+    position: relative;
+    left: 50px;
+    font-size: 50px;
+}
+
+.radio-btn {
+    width: 50px;
+    height: 50px;
+}
+
+#settingsBack {
+    position: fixed;
+    bottom: 10px;
+    left: 3%;
+    right: 3%;
+    height: 150px;
+    background-color: red;
+    font-size: 120px;
+    border-radius: 60px;
+    border: 1px solid black;
+}

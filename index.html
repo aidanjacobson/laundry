@@ -12,6 +12,9 @@
             <button onclick="startLaundry()" id="startBtn">Start New Load</button>
             <div id="loads">
             </div>
+            <div id="settingsContainer">
+                <img id="settingsCog" width="150" height="150" src="https://www.svgrepo.com/show/163563/settings-cog.svg" onclick="settingsClick()" />
+            </div>
         </div>
         <div id="moreInfo" hidden>
             <h1>Laundry Load</h1>
@@ -21,6 +24,14 @@
             <p>Machine Number: <span id="miNum" class="fakeLink" onclick="miSet()">Click to Set</span></p>
             <p class="fakeLink" id="actionBtn" onclick="actionBtnClick()">Move To Dryer</p>
             <button id="backBtn" onclick="backToMain()">Back</button>
+        </div>
+        <div id="settings" hidden>
+            <h1 class="text-l1">Settings</h1>
+            <h2 class="text-l2">Notifications</h2>
+            <h3 class="text-l3">Notification preference:</h3>
+            <input type="radio" class="radio-btn" name="notif-pref" value="alldone" id="notif-alldone" onclick="doNotifPrefChange()" /><label for="notif-alldone" class="text-l3">When all loads are finished</label><br>
+            <input type="radio" class="radio-btn" name="notif-pref" value="onedone" id="notif-onedone" onclick="doNotifPrefChange()" /><label for="notif-onedone" class="text-l3">When one load is finished</label>
+            <button id="settingsBack" onclick="backFromSettings()">Back</button>
         </div>
     </body>
 </html>
