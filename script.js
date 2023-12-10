@@ -11,13 +11,14 @@
         nextFinish: timestamp,
         lastFinish: timestamp,
         settings: {
-            notifs: String
+            notifs: String,
+            loadTimes: {
+                washer: Number,
+                dryer: Number
+            }
         }
     }
 */
-
-const washer_mins = 38;
-const dryer_mins = 50;
 
 // Window loaded
 window.addEventListener("load", main);
@@ -33,7 +34,7 @@ async function startLaundry() {
     var time = Date.now();
     config.loads.push({
         started: time,
-        duration: washer_mins*60*1000,
+        duration: config.settings.loadTimes.washer*60*1000,
         location: 0,
         machineNumber: ""
     });
@@ -65,6 +66,7 @@ function calculateFirstAndLastFinish() {
 async function parseLaundries() {
     await updateConfig();
     updateSelectedPrefs();
+    updateLoadTimesFromConfig();
     loads.innerHTML = "";
     for (var i = 0; i < config.loads.length; i++) {
         var load = config.loads[i];
@@ -181,7 +183,7 @@ async function actionBtnClick() {
         config.loads[lastIndex].location = 1;
         config.loads[lastIndex].machineNumber = "";
         config.loads[lastIndex].started = Date.now();
-        config.loads[lastIndex].duration = dryer_mins*60*1000;
+        config.loads[lastIndex].duration = config.settings.loadTimes.dryer*60*1000;
     } else { // load is in dryer, we can delete
         config.loads.splice(lastIndex, 1);
     }
@@ -248,4 +250,19 @@ function updateSelectedNotifPref() {
 function backFromSettings() {
     settings.hide();
     mainPage.show();
+}
+
+async function doWasherTimeChange() {
+    config.settings.loadTimes.washer = +washerMins.value;    
+    await saveConfig();
+}
+
+async function doDryerTimeChange() {
+    config.settings.loadTimes.dryer = +dryerMins.value;
+    await saveConfig();
+}
+
+function updateLoadTimesFromConfig() {
+    washerMins.value = config.settings.loadTimes.washer;
+    dryerMins.value = config.settings.loadTimes.dryer;
 }
