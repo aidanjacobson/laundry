@@ -63,6 +63,7 @@ function calculateFirstAndLastFinish() {
     console.log(firstFinish, lastFinish);
     config.nextFinish = firstFinish;
     config.lastFinish = lastFinish;
+    config.firstStart = firstStart;
     updateFinishBasedOnPrefs();
 }
 
