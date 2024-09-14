@@ -48,12 +48,16 @@ async function startLaundry() {
 function calculateFirstAndLastFinish() {
     var firstFinish = -1;
     var lastFinish = -1;
+    var firstStart = -1;
     for (var i = 0; i < config.loads.length; i++) {
         if ((config.loads[i].started+config.loads[i].duration < firstFinish || firstFinish == -1)) { // found new first finisher that isn't already done
             firstFinish = config.loads[i].started+config.loads[i].duration;
         }
         if (config.loads[i].started+config.loads[i].duration > lastFinish || lastFinish == -1) { // found new last finisher
             lastFinish = config.loads[i].started+config.loads[i].duration;
+        }
+        if (config.loads[i].started < firstStart || firstStart == -1) {
+            firstStart = config.loads[i].started;
         }
     }
     console.log(firstFinish, lastFinish);
